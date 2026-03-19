@@ -1,0 +1,171 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "climateclaw"
+dynamic = ["version"]
+description = "Climate data analysis & statistics — clawing into your data."
+readme = "README.md"
+authors = [{name = "DKRZ, Clint", email = "freva@dkrz.de"}]
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+keywords = ["climate", "weather", "statistics", "analysis"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.12",
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "mypy",
+    "black",
+    "isort",
+    "flake8",
+    "tox",
+]
+
+[project.urls]
+Issues = "https://github.com/climateclaw/climateclaw/issues"
+Source = "https://github.com/climateclaw/climateclaw"
+
+[tool.setuptools.dynamic]
+version = {attr = "climateclaw._version.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["climateclaw*"]
+
+[tool.black]
+line-length = 88
+target-version = ["py310", "py311", "py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["climateclaw"]
+
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+files = "src/climateclaw"
+strict = false
+follow_imports = "silent"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v"
+filterwarnings = [
+    "ignore::UserWarning",
+    "ignore::DeprecationWarning",
+]
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+min_version = 4.0
+env_list = test, lint, types
+passenv = *
+
+[testenv]
+passenv = *
+parallel_show_output = false
+sitepackages = false
+
+[testenv:test]
+description = "Run the tests."
+package = editable
+deps =
+    pytest
+    pytest-cov
+commands =
+    python3 -m pytest -vv tests/ {posargs}
+
+[testenv:test-cov]
+description = "Run tests with coverage."
+package = editable
+deps =
+    pytest
+    pytest-cov
+commands =
+    python3 -m pytest -vv --cov=climateclaw --cov-report=html:coverage_report --cov-report=xml --junitxml=report.xml tests/ {posargs}
+    python3 -m coverage report --fail-under=80 --precision=2
+
+[testenv:lint]
+description = "Check code quality."
+skip_install = true
+deps =
+    black
+    isort
+    flake8
+commands =
+    python3 -m isort --check --profile black -t py310 -l 88 src/climateclaw
+    python3 -m black --check src/climateclaw tests
+    python3 -m flake8 src/climateclaw --count --max-complexity=10 --ignore=F405,F403,E704,W503,C901 --max-line-length=88 --statistics --show-source
+
+[testenv:types]
+description = "Static type checking."
+skip_install = true
+deps =
+    mypy
+    types-setuptools
+commands =
+    python3 -m mypy src/climateclaw --ignore-missing-imports
+
+[testenv:format]
+description = "Auto-format code."
+deps =
+    black
+    isort
+commands =
+    python3 -m isort --profile black -t py310 -l 88 src/climateclaw tests
+    python3 -m black src/climateclaw tests
+
+[testenv:release]
+description = "Tag a new release."
+deps =
+    git-python
+    packaging
+    requests
+    tomli
+commands =
+    python3 bump.py tag climateclaw -p .
+allowlist_externals =
+    rm
+    curl
+commands_pre =
+    curl -H 'Cache-Control: no-cache' -Ls -o bump.py https://raw.githubusercontent.com/freva-org/freva-admin/main/release.py
+commands_post =
+    rm bump.py
+
+[testenv:bump]
+description = "Deploy version bump."
+deps =
+    git-python
+    packaging
+    requests
+    tomli
+commands =
+    python3 bump.py deploy climateclaw -p .
+allowlist_externals =
+    rm
+    curl
+commands_pre =
+    curl -H 'Cache-Control: no-cache' -Ls -o bump.py https://raw.githubusercontent.com/freva-org/freva-admin/main/release.py
+commands_post =
+    rm bump.py
+"""
