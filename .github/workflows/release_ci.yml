@@ -166,10 +166,14 @@
         - name: Publish skill to ClawHub
           run: |
             clawhub login --token ${{ secrets.CLAWHUB_TOKEN }}
-            clawhub publish . \
-              --slug climateclaw \
-              --version ${{ env.TAG }} \
-              --changelog "Release v${{ env.TAG }}"
+            for i in 1 2 3; do
+              clawhub publish . \
+                --slug climateclaw \
+                --version ${{ env.TAG }} \
+                --changelog "Release v${{ env.TAG }}" && break
+              echo "Attempt $i failed, retrying in 30s..."
+              sleep 30
+            done
   
     github-release:
       name: Create GitHub Release
