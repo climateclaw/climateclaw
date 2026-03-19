@@ -3,14 +3,22 @@
 [![CI](https://github.com/climateclaw/climateclaw/actions/workflows/tests_ci.yml/badge.svg)](https://github.com/climateclaw/climateclaw/actions)
 [![PyPI](https://img.shields.io/pypi/v/climateclaw)](https://pypi.org/project/climateclaw/)
 [![Python](https://img.shields.io/pypi/pyversions/climateclaw)](https://pypi.org/project/climateclaw/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-BSD-purple.svg)](LICENSE)
 
 Climate data analysis & statistics — clawing into your data.
 
 ## Installation
 
+### Install via PyPI
+
 ```bash
 pip install climateclaw
+```
+
+### Install via Conda
+
+```bash
+conda install xarray-prism
 ```
 
 ## Usage
