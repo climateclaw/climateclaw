@@ -18,7 +18,7 @@ pip install climateclaw
 ### Install via Conda
 
 ```bash
-conda install xarray-prism
+conda install climateclaw
 ```
 
 ## Usage
