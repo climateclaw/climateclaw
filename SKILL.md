@@ -4,7 +4,7 @@ description: >
   Fetch historical climate data from Open-Meteo (no API key needed) and run
   analysis: compute means, detect anomalies against a baseline period, and
   identify linear warming/cooling trends. Requires the `climateclaw` Python
-  package (pip install climateclaw).
+  package (`pip install climateclaw` or `conda install climateclaw`).
 metadata:
   emoji: "🌡️"
   requires:
