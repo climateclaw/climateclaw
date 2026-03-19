@@ -207,5 +207,6 @@ zsdoc/data
 # Zunit tests' output
 /tests/_output/*
 !/tests/_output/.gitkeep
-
+.DS_Store
+src/.DS_Store
 # End of https://www.toptal.com/developers/gitignore/api/python,zsh
